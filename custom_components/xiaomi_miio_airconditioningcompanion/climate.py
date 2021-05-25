@@ -323,6 +323,8 @@ class XiaomiAirConditioningCompanion(ClimateEntity):
                     ATTR_HVAC_MODE: state.mode.name.lower() if self._state else "off",
                 }
             )
+            if self._state_attrs[ATTR_TEMPERATURE] == 65535:
+                self._state_attrs[ATTR_TEMPERATURE] = None
             self._last_on_operation = OperationMode[state.mode.name].value
             if state.power == "off":
                 self._hvac_mode = HVAC_MODE_OFF
@@ -330,7 +332,7 @@ class XiaomiAirConditioningCompanion(ClimateEntity):
             else:
                 self._hvac_mode = self._last_on_operation
                 self._state = True
-            self._target_temperature = state.target_temperature
+            self._target_temperature = self._state_attrs[ATTR_TEMPERATURE]
             self._fan_mode = state.fan_speed
             self._swing_mode = state.swing_mode
 
