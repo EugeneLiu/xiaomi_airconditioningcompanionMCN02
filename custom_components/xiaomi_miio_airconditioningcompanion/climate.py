@@ -53,6 +53,8 @@ TARGET_TEMPERATURE_STEP = 1
 DEFAULT_TIMEOUT = 10
 DEFAULT_SLOT = 30
 
+UPPER_TARGET_TEMPERATURE = 100
+
 ATTR_AIR_CONDITION_MODEL = "ac_model"
 ATTR_SWING_MODE = "swing_mode"
 ATTR_FAN_MODE = "fan_mode"
@@ -317,10 +319,13 @@ class XiaomiAirConditioningCompanion(ClimateEntity):
             self._state_attrs.update(
                 {
                     ATTR_LOAD_POWER: state.load_power,
-                    ATTR_TEMPERATURE: state.target_temperature,
+                    ATTR_TEMPERATURE: state.target_temperature
+                    if state.target_temperature < UPPER_TARGET_TEMPERATURE
+                    else None,
                     ATTR_SWING_MODE: state.swing_mode.name.lower(),
                     ATTR_FAN_MODE: state.fan_speed.name.lower(),
-                    ATTR_HVAC_MODE: state.mode.name.lower() if self._state else "off",
+                    ATTR_HVAC_MODE: state.mode.name.lower()
+                    if self._state else "off",
                 }
             )
             self._last_on_operation = OperationMode[state.mode.name].value
