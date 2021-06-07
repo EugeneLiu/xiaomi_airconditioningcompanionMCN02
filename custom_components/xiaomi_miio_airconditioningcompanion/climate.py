@@ -266,6 +266,7 @@ class XiaomiAirConditioningCompanion(ClimateEntity):
         if new_state is None:
             return
         await self._async_update_temp(new_state)
+        await self.async_update_ha_state()
 
     async def _async_power_sensor_changed(self, entity_id, old_state, new_state):
         """Handle power sensor changes."""
@@ -273,6 +274,7 @@ class XiaomiAirConditioningCompanion(ClimateEntity):
             return
 
         await self._async_update_power_state(new_state)
+        await self.async_update_ha_state()
 
     async def _try_command(self, mask_error, func, *args, **kwargs):
         """Call a AC companion command handling error messages."""
