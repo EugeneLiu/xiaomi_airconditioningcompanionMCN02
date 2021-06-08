@@ -51,6 +51,7 @@ DEFAULT_NAME = "Xiaomi AC Companion"
 DATA_KEY = "climate.xiaomi_miio"
 TARGET_TEMPERATURE_STEP = 1
 UPDATE_AFTER_ACTION_TIME = 0.3
+ACTION_GAP_TIME = 1.5
 
 DEFAULT_TIMEOUT = 10
 DEFAULT_SLOT = 30
@@ -225,6 +226,7 @@ class XiaomiAirConditioningCompanion(ClimateEntity):
         self._fan_mode = None
         self._air_condition_model = None
         self._target_temperature = None
+        self._temperature_to_target = None
 
         if sensor_entity_id:
             async_track_state_change(hass, sensor_entity_id, self._async_sensor_changed)
@@ -430,15 +432,27 @@ class XiaomiAirConditioningCompanion(ClimateEntity):
 
         return [speed.name.lower() for speed in FanSpeed]
 
+    async def _async_do_set_temp(self, _=None):
+        if self._temperature_to_target is not None:
+            await self.async_send_command('set_tar_temp', [self._temperature_to_target])
+            self._temperature_to_target = None
+
     async def async_set_temperature(self, **kwargs):
         """Set target temperature."""
-        if kwargs.get(ATTR_TEMPERATURE) is not None:
-            self._target_temperature = kwargs.get(ATTR_TEMPERATURE)
-            await self.async_send_command('set_tar_temp', [self._target_temperature])
+        action_before = False
         if kwargs.get(ATTR_HVAC_MODE) is not None:
-            self._hvac_mode = OperationMode(kwargs.get(ATTR_HVAC_MODE))
-            mode_value = 'wind' if self._hvac_mode.value == HVAC_MODE_FAN_ONLY else self._hvac_mode.value
-            await self.async_send_command('set_mode', [mode_value])
+            await self.async_set_hvac_mode(kwargs.get(ATTR_HVAC_MODE))
+            action_before = True
+
+        if kwargs.get(ATTR_TEMPERATURE) is not None:
+            self._temperature_to_target = kwargs.get(ATTR_TEMPERATURE)
+            if not action_before:
+                await self._async_do_set_temp()
+            else:
+                async_call_later(
+                    self.hass,
+                    ACTION_GAP_TIME,
+                    self._async_do_set_temp)
 
     async def async_set_swing_mode(self, swing_mode):
         """Set the swing mode."""
