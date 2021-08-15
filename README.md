@@ -28,7 +28,7 @@ Credits: Thanks to [Rytilahti](https://github.com/rytilahti/python-miio) for all
 
 ## Install
 
-You can install this custom component by adding this repository ([https://github.com/EugeneLiu/xiaomi_airconditioningcompanionMCN02](https://github.com/EugeneLiu/xiaomi_airconditioningcompanionMCN02/)) to [HACS](https://hacs.xyz/) in the settings menu of HACS first. You will find the custom component in the integration menu afterwards, look for 'Xiaomi Mi and Aqara Air Conditioning Companion Integration'. Alternatively, you can install it manually by copying the custom_component folder to your Home Assistant configuration folder.
+You can install this custom component by adding this repository ([https://github.com/EugeneLiu/xiaomi_airconditioningcompanionMCN02](https://github.com/EugeneLiu/xiaomi_airconditioningcompanionMCN02/)) to [HACS](https://hacs.xyz/) in the settings menu of HACS first. You will find the custom component in the integration menu afterwards, look for 'Xiaomi Air Conditioning Companion 2'. Alternatively, you can install it manually by copying the custom_component folder to your Home Assistant configuration folder.
 
 
 ## Setup
