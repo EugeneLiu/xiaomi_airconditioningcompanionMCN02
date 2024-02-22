@@ -3,9 +3,9 @@
   "name": "Xiaomi Air Conditioning Companion 2",
   "documentation": "https://github.com/EugeneLiu/xiaomi_airconditioningcompanionMCN02",
   "issue_tracker": "https://github.com/EugeneLiu/xiaomi_airconditioningcompanionMCN02/issues",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "requirements": [
-    "construct==2.9.45",
+    "construct>=2.10.56",
     "python-miio>0.5.3"
   ],
   "dependencies": ["sensor"],
